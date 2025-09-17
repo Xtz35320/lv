@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import pool from "../api/src/database/data.js";
+import pool from "../database/data.js";
 
 /**
  * Consulta uma sessão ativa no banco de dados a partir do ID do usuário.

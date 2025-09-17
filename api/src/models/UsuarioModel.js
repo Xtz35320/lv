@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import pool from "../api/src/database/data.js";
+import pool from "../database/data.js";
 
 /**
  * Cadastra um novo usuário no banco de dados.

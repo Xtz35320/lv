@@ -6,6 +6,7 @@ dotenv.config();
 // Importando as rotas
 import veiculoRoute from './routes/veiculoRoute.js';
 import categoriaRoute from './routes/categoriaRoute.js'; // Ativada
+import usuarioRoute from './routes/usuarioRoutes.js'
 
 const app = express();
 
@@ -33,7 +34,17 @@ app.get('/', (req, res) => {
             'GET - Consultar categorias por tipo': `${rootDomain}/api/categorias?tipo=SUV`,
             'POST - Cadastrar categoria': `${rootDomain}/api/categoria`,
             'PUT - Alterar categoria': `${rootDomain}/api/categoria/:id`,
-            'DELETE - Deletar categoria': `${rootDomain}/api/categoria/:id`
+            'DELETE - Deletar categoria': `${rootDomain}/api/categoria/:id`,
+            // Login
+            'POST - usuario ': `${rootDomain}/usuario`,
+            'POST - usuario login': `${rootDomain}/usuario/login`,
+            'GET - usuarios ': `${rootDomain}/usuarios`,
+            'GET - usuario id': `${rootDomain}/usuarios/:id`,
+            'GET - usuario ': `${rootDomain}/usuario`,
+            'GET - usuario email ': `${rootDomain}/usuario/email/:email`,
+            'PATCH - usuario id ': `${rootDomain}/usuario/:id`,
+            'PUT - usuario id ': `${rootDomain}/usuario/:id`,
+            'DELETE - usuario id ': `${rootDomain}/usuario/:id`
         }
     });
 });

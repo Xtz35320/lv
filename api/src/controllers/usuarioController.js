@@ -1,6 +1,6 @@
 // controller/usuarioController.js
-import * as UsuarioModel from "./UsuarioModel.js";
-import * as Sessoes from './SessoesModel.js';
+import * as UsuarioModel from "../models/UsuarioModel.js";
+import * as Sessoes from '../utils/sessoesCache.js';
 import * as responses from '../utils/responses.js';
 
 export const cadastrar = async (req, res) => {
