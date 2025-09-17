@@ -1,41 +1,105 @@
-import pool from "../database/data.js";
+import pool from '../database/data.js';
 
-
-export const cadastrar = async (veiculo) => {    
-    // Obter uma conexão do pool
-    const cx = await pool.getConnection(); 
+export const consultar = async () => {
+    let cx;
     try {
-        // Desestruturar o objeto veiculo
-        const { 
-            modelo,
-            ano_fabricacao,
-            ano_modelo,
-            cor,
-            num_portas,
-            fotos,
-            categoria_id,
-            montadora_id,
-            tipo_cambio,
-            tipo_direcao } = veiculo; 
-
-        // Query para inserir um novo veículo
-        const query = `INSERT INTO veiculo (modelo, ano_fabricacao, ano_modelo, cor, num_portas, fotos, categoria_id, montadora_id, tipo_cambio, tipo_direcao) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-
-        // Executar a query com os valores do veículo
-        const [result] = await cx.query(query,[modelo,ano_fabricacao,ano_modelo,cor,num_portas,fotos,categoria_id,montadora_id,tipo_cambio,tipo_direcao]);
-    
-        // Verificar se a inserção foi bem-sucedida
-        if (result.affectedRows === 0) {
-            throw new Error("Erro ao cadastrar veículo");
-        } 
-        // Retornar o ID do veículo inserido
-        return result.insertId; 
-    } catch (error) {
-        // Lançar o erro para ser tratado pelo chamador
-        throw error; 
-    } finally{
-        if (cx) {
-            cx.release(); // Liberar a conexão de volta ao pool
-        }
+        cx = await pool.getConnection();
+        const [dados, meta_dados] = await cx.query('SELECT * FROM veiculo');
+        return dados;
+    } 
+    catch (error) {
+        throw error;
     }
-}
+    finally {
+        if (cx) cx.release(); // Libere a conexão após o uso
+    }
+};
+
+export const consultarPorModelo = async (modelo) => {
+    let cx;
+    try {
+        cx = await pool.getConnection();
+        const [dados, meta_dados] = await cx.query('SELECT * FROM veiculo WHERE `modelo` = ?;', [modelo]);
+        return dados;
+    } 
+    catch (error) {
+        throw error;
+    }
+    finally {
+        if (cx) cx.release(); // Libere a conexão após o uso
+    }
+};
+
+export const consultarPorId = async (id) => {
+    let cx;
+    try {
+        cx = await pool.getConnection();
+        const [dados, meta_dados] = await cx.query('SELECT * FROM veiculo WHERE id = ?;', [id]);
+        return dados;
+    } 
+    catch (error) {
+        throw error;
+    }
+    finally {
+        if (cx) cx.release(); // Libere a conexão após o uso
+    }
+};
+
+export const cadastrar = async (veiculo) => {
+    let cx;
+    try {
+        const { modelo, ano_fabricacao,	ano_modelo,	cor,num_portas,	fotos, categoria_id, montadora_id, tipo_cambio, tipo_direcao } = veiculo;
+        const cmdSql = 'INSERT INTO veiculo (`modelo`, `ano_fabricacao`, `ano_modelo`, `cor`, `num_portas`, `fotos`, `categoria_id`, `montadora_id`, `tipo_cambio`, `tipo_direcao`) VALUES (?,?,?,?,?,?,?,?,?,?);';
+        
+        cx = await pool.getConnection();
+        await cx.query(cmdSql, [modelo, ano_fabricacao,	ano_modelo,	cor,num_portas,	fotos, categoria_id, montadora_id, tipo_cambio, tipo_direcao ]);
+        const [dados] = await cx.query('SELECT * FROM veiculo WHERE `modelo` = ?;', [modelo]);
+        return dados;
+    } 
+    catch (error) {
+        throw error;
+    }
+    finally {
+        if (cx) cx.release(); // Libere a conexão após o uso
+    }
+};
+
+export const alterar = async (veiculo) => {
+    let cx;
+    try {
+        const { modelo,  ano_fabricacao, ano_modelo, cor, num_portas, fotos, categoria_id, montadora_id, tipo_cambio, tipo_direcao, id } = veiculo;
+        const cmdSql = 'UPDATE veiculo SET `modelo`=?, `ano_fabricacao`=?, `ano_modelo`=?, `cor`=?, `num_portas`=?, `fotos`=?, `categoria_id`=?, `montadora_id`=?, `tipo_cambio`=?, `tipo_direcao`=? WHERE id = ?';
+
+        cx = await pool.getConnection();
+
+        const [execucao] = await cx.query(cmdSql, [modelo,  ano_fabricacao,	ano_modelo,	cor,num_portas,	fotos, categoria_id, montadora_id, tipo_cambio, tipo_direcao ,id]);
+
+        if(execucao.affectedRows > 0){
+            const [dados, meta_dados] = await cx.query('SELECT * FROM veiculo WHERE id = ?;', [id]);
+            return dados;
+        }
+        return [];
+    } 
+    catch (error) {
+        throw error;
+    }
+    finally {
+        if (cx) cx.release(); // Libere a conexão após o uso
+    }
+};
+
+export const deletar = async (id) => {
+    let cx;
+    try {
+        cx = await pool.getConnection();
+        const [dados, meta_dados] = await cx.query('DELETE FROM veiculo WHERE id = ?;', [id]);
+        return dados;
+    }
+    catch (error) {
+        throw error;
+    }
+    finally {
+        if (cx) cx.release(); // Libere a conexão após o uso
+    }
+};
+
